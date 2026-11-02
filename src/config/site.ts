@@ -5,8 +5,8 @@ export const SITE = {
   url: 'https://w-currents.cl',
   locale: 'es_CL',
   lang: 'es-CL',
-  title: 'wcurrents | Ingeniería de sistemas críticos en Chile',
-  description: 'Protección contra incendios, electricidad e instrumentación, automatización, telecomunicaciones y seguridad electrónica para minería, energía e industria.',
+  title: 'wcurrents | Corrientes débiles y sistemas críticos en Chile',
+  description: 'Ingeniería de corrientes débiles y sistemas críticos: incendios, automatización, telecomunicaciones y seguridad electrónica para minería, energía e industria.',
   ogImage: '/og/default.jpg',
   themeColor: '#1B3B4F',
 } as const

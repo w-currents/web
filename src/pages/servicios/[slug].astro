@@ -4,7 +4,7 @@ import Base from '@/layouts/Base.astro'
 import Nav from '@/features/nav/Nav'
 import { Footer } from '@/features/footer/Footer'
 import WhatsApp from '@/features/whatsapp/WhatsApp'
-import { SERVICES, FACTS, MARCO } from '@/content/site'
+import { SERVICES, FACTS, MARCO, CORRIENTES_DEBILES } from '@/content/site'
 import { SITE } from '@/config/site'
 
 export const getStaticPaths = (() => SERVICES.map((s, i) => ({ params: { slug: s.slug }, props: { i } }))) satisfies GetStaticPaths
@@ -15,8 +15,10 @@ const m = MARCO[i]
 const f = FACTS[i]
 const path = `/servicios/${s.slug}`
 const url = `${SITE.url}${path}`
-const title = `${s.title} | wcurrents`
-const description = `${s.q} ${s.desc}`.slice(0, 158)
+const cd = CORRIENTES_DEBILES[s.slug]
+const title = cd && s.slug !== 'proteccion-contra-incendios' ? `${s.title} y corrientes débiles | wcurrents` : `${s.title} | wcurrents`
+const full = cd ? `Corrientes débiles: ${s.desc[0].toLowerCase()}${s.desc.slice(1)}` : `${s.q} ${s.desc}`
+const description = full.length <= 158 ? full : full.slice(0, 157).replace(/\s+\S*$/, '') + '…'
 const related = SERVICES.filter((_, k) => k !== i)
 
 const jsonLd = [
@@ -43,7 +45,10 @@ const jsonLd = [
   {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: [{ '@type': 'Question', name: '¿Qué define el alcance de este servicio?', acceptedAnswer: { '@type': 'Answer', text: f.plazo } }],
+    mainEntity: [
+      { '@type': 'Question', name: '¿Qué define el alcance de este servicio?', acceptedAnswer: { '@type': 'Answer', text: f.plazo } },
+      ...(cd ? [{ '@type': 'Question', name: `¿${s.title} es parte de las corrientes débiles?`, acceptedAnswer: { '@type': 'Answer', text: cd } }] : []),
+    ],
   },
 ]
 ---
@@ -64,6 +69,13 @@ const jsonLd = [
         <ul class="mt-3 grid max-w-[60ch] gap-2 text-[15px]">
           {s.items.map((x) => <li class="flex gap-2"><span class="text-ice" aria-hidden="true">✓</span>{x}</li>)}
         </ul>
+
+        {cd && (
+          <>
+            <h2 class="mt-10 text-xl font-semibold">¿Es parte de las corrientes débiles?</h2>
+            <p class="mt-3 max-w-[60ch] text-[16px] text-soft">{cd}</p>
+          </>
+        )}
 
         <h2 class="mt-10 text-xl font-semibold">Marco normativo y alcance de wcurrents</h2>
         <div class="mt-4 grid gap-4 sm:grid-cols-2">

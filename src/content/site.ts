@@ -1,6 +1,14 @@
 /** Contenido del sitio (fuente: brochure y brandbook). Un solo lugar para editar textos. */
 import { Flame, Zap, Cpu, Network, Cctv, HardHat, Search, DraftingCompass, CalendarRange, PackageCheck, Wrench, Power, LifeBuoy, Activity, Blocks, MountainSnow } from 'lucide-react'
 
+/** Disciplinas que son "corrientes débiles" (SEO). Texto visible en la página y respuesta de FAQ. */
+export const CORRIENTES_DEBILES: Record<string, string> = {
+  'telecomunicaciones': 'La fibra óptica, el cableado estructurado y las redes industriales son instalaciones de corrientes débiles: transportan señal y datos, no potencia. wcurrents las diseña, instala y pone en marcha con topologías redundantes para faenas críticas.',
+  'seguridad-electronica': 'El CCTV, el control de acceso y la detección de intrusión pertenecen a las corrientes débiles. wcurrents los integra al centro de control para que cada evento quede registrado y se responda a tiempo.',
+  'automatizacion-industrial': 'El control de procesos, la instrumentación y las redes de campo son ingeniería de corrientes débiles: señales de baja tensión que llegan a sala de control. wcurrents las integra bajo SCADA con registro histórico.',
+  'proteccion-contra-incendios': 'La detección y alarma de incendio es una instalación de corrientes débiles: sensores y paneles de baja tensión que dan la alerta temprana. wcurrents la integra con la extinción y el centro de control.',
+}
+
 export const SERVICES = [
   { n: '01', slug: 'proteccion-contra-incendios', icon: Flame, short: 'Incendios', title: 'Protección contra incendios', q: '¿Cómo se detecta el humo antes de que sea fuego?', desc: 'La aspiración y la detección inteligente identifican partículas en fase incipiente; los agentes limpios extinguen sin dañar equipos energizados.', items: ['Detección inteligente y convencional', 'Extinción por agentes limpios', 'Detección por aspiración'], img: '/img/svc-incendios.webp', alt: 'Técnico trabajando en un sistema contra incendios' },
   { n: '02', slug: 'electricidad-e-instrumentacion', icon: Zap, short: 'Electricidad', title: 'Electricidad e instrumentación', q: '¿Qué ocurre aguas abajo cuando cae una alimentación?', desc: 'Distribución en media y baja tensión, con instrumentación de campo integrada al sistema de control.', items: ['Media y baja tensión', 'Instrumentación industrial', 'Integración con automatización'], img: '/img/svc-electricidad.webp', alt: 'Tablero eléctrico' },
