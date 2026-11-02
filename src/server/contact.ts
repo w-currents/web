@@ -1,11 +1,10 @@
 import { z } from 'zod'
 import { contactSchema } from '@/lib/contact-schema'
 import type { Mailer } from './mailer'
+import { renderQuoteMail } from './mail-template'
 
-export type ContactEnv = { to: string; from: string }
+export type ContactEnv = { to: string; from: string; siteUrl: string }
 export type ContactResult = { status: 200 | 400 | 500; body: { ok: boolean; error?: string; fields?: Record<string, string[]> } }
-
-const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!)
 
 /** Lógica pura del formulario (sin Astro ni red): valida, descarta robots y arma el correo. Es lo que se prueba. */
 export async function handleContact(raw: unknown, mailer: Mailer, env: ContactEnv): Promise<ContactResult> {
@@ -15,22 +14,9 @@ export async function handleContact(raw: unknown, mailer: Mailer, env: ContactEn
   // Robot: respondemos como si hubiera funcionado, sin enviar nada.
   if (d.website) return { status: 200, body: { ok: true } }
 
-  const lines = [
-    ['Disciplinas', d.disciplinas.join(', ')],
-    ['Sector', d.sector],
-    ['Plazo', d.plazo],
-    ['Nombre', d.nombre],
-    ['Correo', d.email],
-  ] as const
+  const { subject, text, html } = renderQuoteMail(d, { siteUrl: env.siteUrl })
   try {
-    await mailer.send({
-      to: env.to,
-      from: env.from,
-      replyTo: d.email,
-      subject: `Cotización web · ${d.nombre} · ${d.sector}`,
-      text: lines.map(([k, v]) => `${k}: ${v}`).join('\n'),
-      html: `<table>${lines.map(([k, v]) => `<tr><td><b>${esc(k)}</b></td><td>${esc(v)}</td></tr>`).join('')}</table>`,
-    })
+    await mailer.send({ to: env.to, from: env.from, replyTo: d.email, subject, text, html })
   } catch (e) {
     console.error('contact: fallo al enviar', e instanceof Error ? e.message : e)
     return { status: 500, body: { ok: false, error: 'No pudimos enviar su solicitud. Intente de nuevo o escríbanos por WhatsApp.' } }

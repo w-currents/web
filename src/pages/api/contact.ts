@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro'
 import { handleContact } from '@/server/contact'
 import { ResendMailer } from '@/server/mailer'
+import { SITE } from '@/config/site'
 
 export const prerender = false
 
@@ -28,6 +29,6 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     console.error('contact: faltan variables de entorno (RESEND_API_KEY, CONTACT_TO, CONTACT_FROM)')
     return json({ ok: false, error: 'Servicio de correo no configurado' }, 500)
   }
-  const r = await handleContact(raw, new ResendMailer(key), { to, from })
+  const r = await handleContact(raw, new ResendMailer(key), { to, from, siteUrl: SITE.url })
   return json(r.body, r.status)
 }

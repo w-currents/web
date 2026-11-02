@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from 'motion/react'
 import { useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { contactSchema, PLAZOS, SECTORS, type ContactInput } from '@/lib/contact-schema'
+import { emailInput, nameInput, phoneInput } from '@/lib/fields'
 import { useContactForm } from '@/lib/useContactForm'
 import { CONTACT, SERVICES } from '@/content/site'
 import { cn } from '@/lib/cn'
@@ -12,10 +13,11 @@ import { useStore } from '@/lib/store'
 import { Button } from '@/components/ui/Button'
 import { SectionHead } from '@/components/ui/SectionHead'
 
-type Form = Pick<ContactInput, 'sector' | 'plazo' | 'nombre' | 'email'>
+type Form = Pick<ContactInput, 'sector' | 'plazo' | 'nombre' | 'telefono' | 'email'>
 // Validación por pasos del formulario visible; el esquema completo se revalida al enviar y en el servidor.
-const schema = contactSchema.pick({ sector: true, plazo: true, nombre: true, email: true })
+const schema = contactSchema.pick({ sector: true, plazo: true, nombre: true, telefono: true, email: true })
 
+const input = 'rounded-xl border border-pac/40 bg-navy px-4 py-3 text-base shadow-[inset_0_2px_6px_#0006] outline-none transition focus:border-ice focus:shadow-neon aria-invalid:border-[#ff9b8a]'
 const chip = (on: boolean) => cn('cursor-pointer rounded-xl border px-4 py-2.5 text-sm font-medium transition', on ? 'border-ice bg-cer shadow-neon' : 'border-pac/40 bg-white/5 hover:bg-white/10')
 
 /** Contacto + cotizador de 3 pasos. Envía a /api/contact (validación compartida + Resend en el servidor). */
@@ -27,7 +29,7 @@ function Cotizador() {
   const [step, setStep] = useState(0)
   const { status, error, submit } = useContactForm()
   const done = status === 'ok'
-  const f = useForm<Form>({ resolver: zodResolver(schema), defaultValues: { nombre: '', email: '' } })
+  const f = useForm<Form>({ resolver: zodResolver(schema), defaultValues: { nombre: '', telefono: '', email: '' } })
   const { watch, setValue, register, formState: { errors }, trigger, handleSubmit } = f
   const honeypot = useRef<HTMLInputElement>(null)
   const sector = watch('sector'), plazo = watch('plazo')
@@ -95,12 +97,24 @@ function Cotizador() {
               {step === 2 && (
                 <div className="grid gap-4">
                   <input ref={honeypot} type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 opacity-0" />
-                  {([['nombre', 'Nombre', 'text'], ['email', 'Correo', 'email']] as const).map(([k, l, t]) => (
-                    <label key={k} className="grid gap-1.5 text-sm font-medium">{l}
-                      <input type={t} {...register(k)} className="rounded-xl border border-pac/40 bg-navy px-4 py-3 text-base shadow-[inset_0_2px_6px_#0006] outline-none transition focus:border-ice focus:shadow-neon" />
-                      {errors[k] && <span className="text-xs text-[#ff9b8a]">{errors[k]?.message}</span>}
-                    </label>
-                  ))}
+                  <label className="grid gap-1.5 text-sm font-medium">Nombre y apellido
+                    <input type="text" autoComplete="name" maxLength={80} placeholder="Ana Pérez" aria-invalid={!!errors.nombre}
+                      {...register('nombre', { onChange: (e) => { e.target.value = nameInput(e.target.value) } })} className={input} />
+                    {errors.nombre && <span className="text-xs text-[#ff9b8a]">{errors.nombre.message}</span>}
+                  </label>
+                  <label className="grid gap-1.5 text-sm font-medium">Celular
+                    <span className="flex items-stretch">
+                      <span className="grid place-items-center rounded-l-xl border border-r-0 border-pac/40 bg-white/5 px-3.5 font-mono text-sm text-ice">+56</span>
+                      <input type="tel" inputMode="numeric" autoComplete="tel-national" maxLength={11} placeholder="9 1234 5678" aria-invalid={!!errors.telefono}
+                        {...register('telefono', { onChange: (e) => { e.target.value = phoneInput(e.target.value) } })} className={cn(input, 'min-w-0 flex-1 rounded-l-none')} />
+                    </span>
+                    {errors.telefono && <span className="text-xs text-[#ff9b8a]">{errors.telefono.message}</span>}
+                  </label>
+                  <label className="grid gap-1.5 text-sm font-medium">Correo
+                    <input type="email" inputMode="email" autoComplete="email" autoCapitalize="none" spellCheck={false} maxLength={254} placeholder="nombre@empresa.cl" aria-invalid={!!errors.email}
+                      {...register('email', { onChange: (e) => { e.target.value = emailInput(e.target.value) } })} className={input} />
+                    {errors.email && <span className="text-xs text-[#ff9b8a]">{errors.email.message}</span>}
+                  </label>
                 </div>
               )}
 
