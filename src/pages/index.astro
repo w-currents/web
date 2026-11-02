@@ -2,7 +2,7 @@
 import Base from '@/layouts/Base.astro'
 import { SITE } from '@/config/site'
 import Nav from '@/features/nav/Nav'
-import Hero from '@/features/hero/Hero'
+import Hero from '@/features/hero/Hero.astro'
 import Empresa from '@/features/empresa/Empresa'
 import Servicios from '@/features/servicios/Servicios'
 import Metodo from '@/features/metodo/Metodo'
@@ -26,7 +26,7 @@ const jsonLd = {
 <Base path="/" jsonLd={jsonLd}>
   <Nav client:load />
   <main>
-    <Hero client:load />
+    <Hero />
     <Empresa client:visible />
     <Servicios client:visible />
     <Metodo client:visible />

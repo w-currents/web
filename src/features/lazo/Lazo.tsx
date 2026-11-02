@@ -11,8 +11,9 @@ const CASOS = [
   { evento: 'Enlace de datos caído', accion: 'Ruta redundante activa' },
 ]
 
-const X = { in: 9, plc: 26, out: 43 } // cqw
-const Y = '49cqw'
+/** Geometría en cqw. k escala tamaños y tipografía; en móvil el lazo ocupa todo el ancho de su contenedor. */
+const DESKTOP = { k: 1, x: { in: 9, plc: 26, out: 43 }, y: 49, capW: 15 }
+const MOBILE = { k: 3.4, x: { in: 16, plc: 50, out: 84 }, y: 19, capW: 31 }
 const RED = '#ff6b5b'
 const AMBER = '#ffc94a'
 const GREEN = '#5df2b0'
@@ -23,7 +24,9 @@ const GREEN = '#5df2b0'
  * Semáforo sobre el PLC: rojo (condición), ámbar (procesando), verde (resuelto).
  * phase: 0 espera · 1 señal viaja · 2 procesa · 3 respuesta viaja · 4 resuelto
  */
-export function Lazo() {
+export function Lazo({ mobile = false }: { mobile?: boolean }) {
+  const { k, x: X, y: Y, capW } = mobile ? MOBILE : DESKTOP
+  const u = (n: number) => `${+(n * k).toFixed(2)}cqw`
   const reduce = useReducedMotion()
   const [scope, animate] = useAnimate()
   const [phase, setPhase] = useState(reduce ? 4 : 0)
@@ -52,60 +55,61 @@ export function Lazo() {
       }
     })()
     return () => { alive = false }
-  }, [reduce, animate])
+  }, [reduce, animate, X])
 
   const c = CASOS[i]
   const solved = phase === 4
-  const led = (on: boolean, color: string) => ({ background: on ? color : '#ffffff22', boxShadow: on ? `0 0 .7cqw ${color}` : 'none' })
+  const led = (on: boolean, color: string) => ({ background: on ? color : '#ffffff22', boxShadow: on ? `0 0 ${u(.7)} ${color}` : 'none' })
   const node = 'absolute z-[5]'
-  const pos = (x: number) => ({ left: `${x}cqw`, top: Y, translate: '-50% -50%' })
-  const cap = (x: number) => ({ left: `${x}cqw`, top: 'calc(49cqw + 2.6cqw)', translate: '-50% 0', width: '15cqw' })
+  const pos = (x: number) => ({ left: `${x}cqw`, top: `${Y}cqw`, translate: '-50% -50%' })
+  const cap = (x: number) => ({ left: `${x}cqw`, top: `${Y + 2.6 * k}cqw`, translate: '-50% 0', width: `${capW}cqw` })
 
   return (
     <div ref={scope} aria-hidden={false} className="pointer-events-none absolute inset-0 z-[5]">
+      {mobile && <div className="absolute h-px bg-linear-to-r from-ice/10 via-ice/40 to-ice/10" style={{ left: `${X.in}cqw`, width: `${X.out - X.in}cqw`, top: `${Y}cqw` }} />}
       {/* Señales */}
-      <div className="pk-in absolute z-[4] rounded-[.3cqw] bg-white opacity-0 shadow-neon-strong" style={{ ...pos(X.in), width: '1.8cqw', height: '.9cqw' }} />
-      <div className="pk-out absolute z-[4] rounded-[.3cqw] opacity-0" style={{ ...pos(X.plc), width: '1.8cqw', height: '.9cqw', background: GREEN, boxShadow: `0 0 1.2cqw ${GREEN}` }} />
+      <div className="pk-in absolute z-[4] bg-white opacity-0 shadow-neon-strong" style={{ ...pos(X.in), width: u(1.8), height: u(.9), borderRadius: u(.3) }} />
+      <div className="pk-out absolute z-[4] opacity-0" style={{ ...pos(X.plc), width: u(1.8), height: u(.9), borderRadius: u(.3), background: GREEN, boxShadow: `0 0 ${u(1.2)} ${GREEN}` }} />
 
       {/* Entrada: sensor del evento */}
       <div className={node} style={pos(X.in)}>
-        <div className="grid place-items-center rounded-[.55cqw] border border-ice bg-deep shadow-neon" style={{ width: '2.8cqw', height: '2.8cqw' }}>
-          <span className="rounded-full transition-colors duration-300" style={{ width: '1cqw', height: '1cqw', ...led(true, solved ? GREEN : RED) }} />
+        <div className="grid place-items-center border border-ice bg-deep shadow-neon" style={{ width: u(2.8), height: u(2.8), borderRadius: u(.55) }}>
+          <span className="rounded-full transition-colors duration-300" style={{ width: u(1), height: u(1), ...led(true, solved ? GREEN : RED) }} />
         </div>
       </div>
 
       {/* Centro de control wcurrents: semáforo + procesamiento */}
       <div className={node} style={pos(X.plc)}>
-        <div className="absolute left-1/2 flex -translate-x-1/2 items-center rounded-full border border-ice/40 bg-deep" style={{ top: '-3.2cqw', gap: '.45cqw', padding: '.4cqw .7cqw' }}>
+        <div className="absolute left-1/2 flex -translate-x-1/2 items-center rounded-full border border-ice/40 bg-deep" style={{ top: u(-3.2), gap: u(.45), padding: `${u(.4)} ${u(.7)}` }}>
           {[[phase <= 1, RED], [phase === 2, AMBER], [phase >= 3, GREEN]].map(([on, col], n) => (
-            <span key={n} className="rounded-full transition-all duration-150" style={{ width: '.8cqw', height: '.8cqw', ...led(on as boolean, col as string) }} />
+            <span key={n} className="rounded-full transition-all duration-150" style={{ width: u(.8), height: u(.8), ...led(on as boolean, col as string) }} />
           ))}
         </div>
-        <div className={cn('relative grid place-items-center rounded-full border bg-deep transition-[box-shadow,border-color] duration-200', phase === 2 ? 'border-white shadow-neon-strong' : 'border-ice shadow-neon')} style={{ width: '3.8cqw', height: '3.8cqw' }}>
-          <img src="/img/isotipo.png" alt="" style={{ width: '2cqw' }} />
-          {phase === 2 && <span className="absolute inset-[-.35cqw] animate-spin rounded-full border-transparent" style={{ borderWidth: '.22cqw', borderTopColor: AMBER, borderRightColor: AMBER, animationDuration: '.45s' }} />}
+        <div className={cn('relative grid place-items-center rounded-full border bg-deep transition-[box-shadow,border-color] duration-200', phase === 2 ? 'border-white shadow-neon-strong' : 'border-ice shadow-neon')} style={{ width: u(3.8), height: u(3.8) }}>
+          <img src="/img/isotipo.png" alt="" style={{ width: u(2) }} />
+          {phase === 2 && <span className="absolute animate-spin rounded-full border-transparent" style={{ inset: u(-.35), borderWidth: u(.22), borderTopColor: AMBER, borderRightColor: AMBER, animationDuration: '.45s' }} />}
         </div>
       </div>
 
       {/* Salida: actuador */}
       <div className={node} style={pos(X.out)}>
-        <div className="grid place-items-center rounded-[.55cqw] border transition-all duration-300" style={{ width: '2.8cqw', height: '2.8cqw', background: solved ? '#0b5c47' : '#0F2431', borderColor: solved ? GREEN : '#9fd0e066', boxShadow: solved ? `0 0 1.6cqw -.2cqw ${GREEN}` : 'none' }}>
-          <span className="rounded-full transition-colors duration-300" style={{ width: '1cqw', height: '1cqw', ...led(solved, GREEN) }} />
+        <div className="grid place-items-center border transition-all duration-300" style={{ width: u(2.8), height: u(2.8), borderRadius: u(.55), background: solved ? '#0b5c47' : '#0F2431', borderColor: solved ? GREEN : '#9fd0e066', boxShadow: solved ? `0 0 ${u(1.6)} ${u(-.2)} ${GREEN}` : 'none' }}>
+          <span className="rounded-full transition-colors duration-300" style={{ width: u(1), height: u(1), ...led(solved, GREEN) }} />
         </div>
       </div>
 
       {/* Leyendas */}
       <div className="absolute text-center" style={cap(X.in)}>
-        <div className="font-mono tracking-widest text-ice/70 uppercase" style={{ fontSize: '.7cqw' }}>Evento</div>
-        <AnimatePresence mode="wait"><motion.div key={c.evento} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="font-medium text-white" style={{ fontSize: '1cqw', marginTop: '.2cqw' }}>{c.evento}</motion.div></AnimatePresence>
+        <div className="font-mono tracking-widest text-ice/70 uppercase" style={{ fontSize: u(.7) }}>Evento</div>
+        <AnimatePresence mode="wait"><motion.div key={c.evento} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="font-medium text-white" style={{ fontSize: u(1), marginTop: u(.2) }}>{c.evento}</motion.div></AnimatePresence>
       </div>
       <div className="absolute text-center" style={cap(X.plc)}>
-        <div className="font-mono tracking-widest text-ice/70 uppercase" style={{ fontSize: '.7cqw' }}>Control</div>
-        <div className="font-medium text-white" style={{ fontSize: '1cqw', marginTop: '.2cqw' }}>wcurrents</div>
+        <div className="font-mono tracking-widest text-ice/70 uppercase" style={{ fontSize: u(.7) }}>Control</div>
+        <div className="font-medium text-white" style={{ fontSize: u(1), marginTop: u(.2) }}>wcurrents</div>
       </div>
       <div className="absolute text-center" style={cap(X.out)}>
-        <div className="font-mono tracking-widest text-ice/70 uppercase" style={{ fontSize: '.7cqw' }}>Respuesta</div>
-        <AnimatePresence mode="wait"><motion.div key={c.accion} initial={{ opacity: 0 }} animate={{ opacity: solved ? 1 : 0.35 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="font-medium" style={{ fontSize: '1cqw', marginTop: '.2cqw', color: solved ? GREEN : '#fff' }}>{c.accion}</motion.div></AnimatePresence>
+        <div className="font-mono tracking-widest text-ice/70 uppercase" style={{ fontSize: u(.7) }}>Respuesta</div>
+        <AnimatePresence mode="wait"><motion.div key={c.accion} initial={{ opacity: 0 }} animate={{ opacity: solved ? 1 : 0.35 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="font-medium" style={{ fontSize: u(1), marginTop: u(.2), color: solved ? GREEN : '#fff' }}>{c.accion}</motion.div></AnimatePresence>
       </div>
     </div>
   )

@@ -3,7 +3,7 @@ import type { AnchorHTMLAttributes, ButtonHTMLAttributes } from 'react'
 import { cn } from '@/lib/cn'
 
 /** Variantes: p = CTA terracota, w = blanco, s = contorno. El terracota se reserva para CTA. */
-const button = cva(
+export const button = cva(
   'inline-flex items-center justify-center gap-2 border border-transparent font-semibold transition duration-200 hover:-translate-y-0.5 disabled:pointer-events-none disabled:opacity-40 cursor-pointer',
   {
     variants: {

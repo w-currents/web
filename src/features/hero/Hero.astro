@@ -1,0 +1,43 @@
+---
+import { cn } from '@/lib/cn'
+import { button } from '@/components/ui/Button'
+import HeroStage from './HeroStage'
+import LazoMobile from '@/features/lazo/LazoMobile'
+
+const TITLE = ['Ingeniería', 'para', 'Infraestructura', 'Crítica']
+const cta = 'md:px-[1.6cqw] md:py-[.85cqw] md:text-[1.1cqw]'
+---
+<header id="inicio" class="overflow-hidden bg-navy text-white">
+  <div class="relative mx-auto max-w-[1500px] [container-type:inline-size] md:aspect-video md:overflow-hidden">
+    <!-- Escritorio: capas visuales (isla) -->
+    <div class="absolute inset-0 hidden md:block"><HeroStage client:media="(min-width: 768px)" /></div>
+
+    <!-- Móvil: foto -->
+    <div class="pt-[76px] md:hidden">
+      <div class="relative h-[250px] overflow-hidden">
+        <img src="/img/pattern.png" alt="" class="absolute -top-2.5 -left-7 w-[420px] opacity-50" width="420" height="420" />
+        <div class="absolute inset-y-0 right-0 w-[56%] bg-linear-to-br from-cer to-[#4f9bb0] [clip-path:polygon(22%_0,100%_0,100%_100%,0_100%)]"></div>
+        <img src="/img/isotipo.png" alt="" class="absolute top-3.5 right-3.5 w-22" />
+        <img src="/img/ingeniero.webp" alt="Ingeniero de wcurrents con casco y tablet" width="833" height="900" fetchpriority="high" class="absolute right-6.5 bottom-0 h-[226px] w-auto drop-shadow-[0_8px_14px_#0008]" />
+      </div>
+    </div>
+
+    <!-- Texto único (HTML estático): flujo en móvil, posicionado en el escenario en escritorio -->
+    <div class="gutter pt-5 pb-2 md:absolute md:top-[9cqw] md:left-[5cqw] md:z-[6] md:w-[38cqw] md:p-0!">
+      <div class="label-mono text-ice md:text-[.95cqw]">Ingeniería de sistemas críticos · Chile</div>
+      <h1 class="my-3 mt-2 text-[34px] leading-none font-semibold tracking-[-.035em] md:mt-[1.2cqw] md:mb-[1.4cqw] md:text-[4.3cqw] md:tracking-[-.03em] md:[text-shadow:0_.3cqw_1.6cqw_#0007]">
+        {TITLE.map((w, i) => <><span class="hero-word" style={`--i:${i}`}>{w}</span>{' '}</>)}
+      </h1>
+      <p class="text-base text-soft md:max-w-[32cqw] md:text-[1.3cqw]">Diseño, suministro, integración y mantenimiento de sistemas críticos para minería, energía e industria.</p>
+      <div class="mt-5 grid gap-2.5 md:mt-[2cqw] md:flex md:gap-[1cqw]">
+        <a href="/#empresa" class={cn(button({ v: 'w' }), cta)}>Conocer wcurrents</a>
+        <a href="/#servicios" class={cn(button({ v: 's' }), cta)}>Explorar disciplinas</a>
+      </div>
+    </div>
+
+    <!-- Móvil: lazo de control -->
+    <div class="mt-4 md:hidden">
+      <div class="relative" style="height:44cqw"><LazoMobile client:media="(max-width: 767px)" /></div>
+    </div>
+  </div>
+</header>

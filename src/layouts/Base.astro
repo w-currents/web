@@ -21,8 +21,14 @@ const seo = Astro.props
   <body>
     <slot />
     <script>
-      import { startSmoothScroll } from '@/lib/scroll'
+      import { startSmoothScroll, scrollToId } from '@/lib/scroll'
       startSmoothScroll()
+      // Enlaces estáticos a secciones (/#id): scroll suave con descuento de la barra flotante.
+      document.addEventListener('click', (e) => {
+        if (e.defaultPrevented) return
+        const a = (e.target as Element).closest<HTMLAnchorElement>('a[href^="/#"]')
+        if (a && scrollToId(a.getAttribute('href')!.slice(2))) e.preventDefault()
+      })
     </script>
   </body>
 </html>
