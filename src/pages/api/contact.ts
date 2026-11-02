@@ -17,14 +17,17 @@ function limited(ip: string) {
 }
 const json = (body: unknown, status: number) => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } })
 
+// En Vercel las comillas del valor se guardan literalmente; las quitamos junto con espacios sobrantes.
+const clean = (v?: string) => v?.trim().replace(/^(["'])(.*)\1$/, '$2').trim()
+
 export const POST: APIRoute = async ({ request, clientAddress }) => {
   if (limited(clientAddress)) return json({ ok: false, error: 'Demasiados intentos. Intente más tarde.' }, 429)
   let raw: unknown
   try { raw = await request.json() } catch { return json({ ok: false, error: 'Solicitud no válida' }, 400) }
 
-  const key = import.meta.env.RESEND_API_KEY
-  const to = import.meta.env.CONTACT_TO
-  const from = import.meta.env.CONTACT_FROM
+  const key = clean(import.meta.env.RESEND_API_KEY)
+  const to = clean(import.meta.env.CONTACT_TO)
+  const from = clean(import.meta.env.CONTACT_FROM)
   if (!key || !to || !from) {
     console.error('contact: faltan variables de entorno (RESEND_API_KEY, CONTACT_TO, CONTACT_FROM)')
     return json({ ok: false, error: 'Servicio de correo no configurado' }, 500)
