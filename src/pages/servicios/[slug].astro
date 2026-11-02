@@ -1,0 +1,108 @@
+---
+import type { GetStaticPaths } from 'astro'
+import Base from '@/layouts/Base.astro'
+import Nav from '@/features/nav/Nav'
+import { Footer } from '@/features/footer/Footer'
+import WhatsApp from '@/features/whatsapp/WhatsApp'
+import { SERVICES, FACTS, MARCO } from '@/content/site'
+import { SITE } from '@/config/site'
+
+export const getStaticPaths = (() => SERVICES.map((s, i) => ({ params: { slug: s.slug }, props: { i } }))) satisfies GetStaticPaths
+
+const { i } = Astro.props
+const s = SERVICES[i]
+const m = MARCO[i]
+const f = FACTS[i]
+const path = `/servicios/${s.slug}`
+const url = `${SITE.url}${path}`
+const title = `${s.title} | wcurrents`
+const description = `${s.q} ${s.desc}`.slice(0, 158)
+const related = SERVICES.filter((_, k) => k !== i)
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: s.title,
+    serviceType: s.title,
+    description: s.desc,
+    url,
+    provider: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+    areaServed: { '@type': 'Country', name: 'Chile' },
+    audience: { '@type': 'BusinessAudience', name: 'Minería, energía e industria' },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Inicio', item: SITE.url },
+      { '@type': 'ListItem', position: 2, name: 'Servicios', item: `${SITE.url}/#servicios` },
+      { '@type': 'ListItem', position: 3, name: s.title, item: url },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [{ '@type': 'Question', name: '¿Qué define el alcance de este servicio?', acceptedAnswer: { '@type': 'Answer', text: f.plazo } }],
+  },
+]
+---
+<Base title={title} description={description} path={path} image={`/og/${s.slug}.jpg`} imageAlt={`${s.title} · wcurrents`} jsonLd={jsonLd}>
+  <Nav client:load />
+  <main class="gutter mx-auto max-w-[1180px] pt-36 pb-24">
+    <nav aria-label="Ruta de navegación" class="label-mono text-ice">
+      <a href="/" class="hover:text-white">Inicio</a> <span aria-hidden="true">/</span> <a href="/#servicios" class="hover:text-white">Servicios</a> <span aria-hidden="true">/</span> <span class="text-white">{s.short}</span>
+    </nav>
+
+    <div class="mt-8 grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:items-start">
+      <article>
+        <p class="label-mono text-ice">{m.ref}</p>
+        <h1 class="mt-3 text-[clamp(34px,5vw,56px)] leading-[1.04] font-semibold tracking-tight text-balance">{s.title}</h1>
+        <p class="mt-5 max-w-[34ch] text-2xl leading-snug font-medium text-ice">{s.q}</p>
+        <p class="mt-4 max-w-[60ch] text-[17px] leading-relaxed text-soft">{s.desc}</p>
+        <h2 class="mt-9 text-xl font-semibold">Qué incluye</h2>
+        <ul class="mt-3 grid max-w-[60ch] gap-2 text-[15px]">
+          {s.items.map((x) => <li class="flex gap-2"><span class="text-ice" aria-hidden="true">✓</span>{x}</li>)}
+        </ul>
+
+        <h2 class="mt-10 text-xl font-semibold">Marco normativo y alcance de wcurrents</h2>
+        <div class="mt-4 grid gap-4 sm:grid-cols-2">
+          <div class="rounded-2xl border border-pac/30 bg-deep p-5">
+            <p class="label-mono text-ice">Qué exige · {m.ref}</p>
+            <p class="mt-2 text-[15px] text-soft">{m.exige}</p>
+          </div>
+          <div class="rounded-2xl border border-ice/40 bg-deep p-5">
+            <p class="label-mono text-ice">Qué entrega wcurrents</p>
+            <p class="mt-2 text-[15px] text-soft">{m.entrega}</p>
+          </div>
+        </div>
+
+        <h2 class="mt-10 text-xl font-semibold">Contexto y fuentes</h2>
+        <ul class="mt-4 grid gap-4">
+          {f.facts.map((x) => (
+            <li class="rounded-2xl border border-pac/25 bg-deep p-5">
+              <p class="text-2xl font-semibold tracking-tight">{x.v}</p>
+              <p class="mt-1 text-[15px] text-soft">{x.l}</p>
+              <p class="mt-2 text-sm text-silver">Fuente: <a href={x.url} rel="noopener noreferrer" target="_blank" class="underline hover:text-white">{x.src}</a>, {x.year}{x.intl ? ' · referencia internacional' : ''}</p>
+            </li>
+          ))}
+        </ul>
+
+        <h2 class="mt-10 text-xl font-semibold">¿Qué define el alcance?</h2>
+        <p class="mt-3 max-w-[60ch] text-[16px] text-soft">{f.plazo}</p>
+
+        <a href="/#cotizar" class="mt-8 inline-flex rounded-xl bg-terra px-6 py-3 font-semibold text-[#fff] shadow-cta hover:bg-[#a5311f]">Cotizar esta disciplina</a>
+      </article>
+
+      <aside class="lg:sticky lg:top-28">
+        <img src={s.img} alt={s.alt} width="1100" height="1650" fetchpriority="high" class="aspect-[4/5] w-full rounded-2xl border border-pac/30 object-cover shadow-card" />
+        <h2 class="mt-8 text-lg font-semibold">Otras disciplinas</h2>
+        <ul class="mt-3 grid gap-2 text-[15px]">
+          {related.map((r) => <li><a href={`/servicios/${r.slug}`} class="text-ice underline-offset-4 hover:underline">{r.title}</a></li>)}
+        </ul>
+      </aside>
+    </div>
+  </main>
+  <Footer />
+  <WhatsApp client:idle />
+</Base>
