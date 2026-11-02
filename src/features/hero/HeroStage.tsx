@@ -8,7 +8,7 @@ import { Bus } from '@/components/ui/Bus'
 function HeroStage() {
   const ref = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
-  const yEng = useTransform(scrollYProgress, [0, 1], [0, -60])
+  const yEng = useTransform(scrollYProgress, [0, 1], [0, 50]) // baja con el scroll: el borde inferior lo recorta y no deja hueco
   const yPat = useTransform(scrollYProgress, [0, 1], [0, -30])
   const yIso = useTransform(scrollYProgress, [0, 1], [0, 40])
   return (
