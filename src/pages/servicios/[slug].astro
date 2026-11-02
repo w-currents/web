@@ -17,7 +17,7 @@ const path = `/servicios/${s.slug}`
 const url = `${SITE.url}${path}`
 const cd = CORRIENTES_DEBILES[s.slug]
 const title = cd && s.slug !== 'proteccion-contra-incendios' ? `${s.title} y corrientes débiles | wcurrents` : `${s.title} | wcurrents`
-const full = cd ? `Corrientes débiles: ${s.desc[0].toLowerCase()}${s.desc.slice(1)}` : `${s.q} ${s.desc}`
+const full = cd ? `Corrientes débiles: ${/^[A-ZÁÉÍÓÚ][a-záéíóúñ]/.test(s.desc) ? s.desc[0].toLowerCase() + s.desc.slice(1) : s.desc}` : `${s.q} ${s.desc}`
 const description = full.length <= 158 ? full : full.slice(0, 157).replace(/\s+\S*$/, '') + '…'
 const related = SERVICES.filter((_, k) => k !== i)
 
