@@ -84,7 +84,7 @@ Pendientes de SEO que dependen de wcurrents (no de código): alta en **Google Se
 | Formularios | **react-hook-form** + **zod** | Formulario y validación, la misma en navegador y servidor |
 | Correo | **Resend** | Envío de las solicitudes |
 | Despliegue | **Vercel** (`@astrojs/vercel`) | Publicación; el adaptador está aislado y se puede cambiar |
-| Analítica | **Vercel Web Analytics** | Páginas vistas; ver sección 8 |
+| Analítica | **Vercel Web Analytics** | Páginas vistas (ver nota de la sección 8)* |
 | Pruebas | **Vitest** | Pruebas del envío del formulario y de los campos |
 
 ---
@@ -162,17 +162,16 @@ npm run dev              # servidor local con recarga en caliente
 | `RESEND_API_KEY` | Clave de Resend. **Secreta**: va en `.env` local y en las variables del hosting; jamás en el repositorio |
 | `CONTACT_TO` | Casilla que recibe las solicitudes (hoy `cdiaz@w-currents.cl`) |
 | `CONTACT_FROM` | Remitente. Mientras el dominio no esté verificado en Resend se usa el remitente de prueba, que **solo entrega a la cuenta dueña de Resend** |
-| `PUBLIC_PLAUSIBLE_DOMAIN`, `PUBLIC_CLARITY_ID` | Opcionales; solo se activan en producción si están definidas |
 
 Si faltan las tres variables de correo, el formulario responde "Servicio de correo no configurado" en lugar de fallar en silencio.
 
 ---
 
-## 8. Analítica
+## 8. Analítica*
 
-- **Vercel Web Analytics** está conectado en `src/layouts/Base.astro` y solo se carga en producción. Mide páginas vistas. En el plan Hobby no incluye eventos personalizados.
-- `src/lib/analytics.ts` contiene `track(evento, propiedades)`, que ya se llama en el sitio desde WhatsApp y el cotizador: `whatsapp_click`, `cotizador_paso`, `cotizador_enviado` y `cotizador_error`. Hoy solo tiene efecto si se define una herramienta compatible; la elección de la herramienta para medir qué componentes se usan más **está pendiente**.
-- Regla fija: **nunca** se envían datos personales como propiedades de un evento.
+Las páginas vistas se miden con Vercel Web Analytics, que solo se carga en producción.
+
+\* **Pendiente:** definir cómo medir qué componentes del sitio se usan más. Se decidirá más adelante.
 
 ---
 
@@ -181,7 +180,6 @@ Si faltan las tres variables de correo, el formulario responde "Servicio de corr
 - Secretos solo en variables de entorno; `.env` está en `.gitignore` y el repositorio es público.
 - Validación del lado del servidor, honeypot y límite por IP. El límite vive en memoria, por lo que en un entorno serverless es de "mejor esfuerzo". Si el formulario recibe spam, el siguiente paso recomendado es **Cloudflare Turnstile**.
 - Sin cookies propias ni formularios que guarden datos: las solicitudes solo se envían por correo, no se almacenan.
-- Los datos de eventos de analítica no incluyen información personal.
 
 ---
 
@@ -192,7 +190,7 @@ Si faltan las tres variables de correo, el formulario responde "Servicio de corr
 - Alta en Google Search Console y Google Business Profile.
 - Validación técnica de los textos por un ingeniero (incluidos los párrafos de corrientes débiles) y de las normas citadas (NCh Elec 4/2003, NCh 2369).
 - Logos reales de certificaciones con enlaces a sus fuentes.
-- Definir la herramienta de analítica para eventos de interacción.
+- Analítica de interacciones* (ver sección 8).
 - Decisión de hosting definitiva, a cargo de wcurrents (el código no depende de un proveedor).
 - Obtener licencia de Britti Sans o confirmar Inter Tight como tipografía definitiva.
 
