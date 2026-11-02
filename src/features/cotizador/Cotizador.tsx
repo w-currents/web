@@ -10,6 +10,7 @@ import { useContactForm } from '@/lib/useContactForm'
 import { CONTACT, SERVICES } from '@/content/site'
 import { cn } from '@/lib/cn'
 import { useStore } from '@/lib/store'
+import { track } from '@/lib/analytics'
 import { Button } from '@/components/ui/Button'
 import { SectionHead } from '@/components/ui/SectionHead'
 
@@ -37,6 +38,7 @@ function Cotizador() {
   const next = async () => {
     if (step === 0 && !quoteSvc.length) return
     if (step === 1 && !(await trigger(['sector', 'plazo']))) return
+    track('cotizador_paso', { paso: step + 1 })
     setStep((s) => s + 1)
   }
 
