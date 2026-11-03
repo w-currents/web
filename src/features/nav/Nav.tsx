@@ -44,7 +44,7 @@ function Nav() {
         <NavigationMenu.Root
           aria-label="Principal"
           className={cn(
-            'absolute left-1/2 flex h-[62px] w-[min(1120px,calc(100%-32px))] -translate-x-1/2 items-center justify-between rounded-2xl border border-pac/30 pr-3 pl-5.5 backdrop-blur-xl backdrop-saturate-150 transition-all duration-300',
+            'tema-oscuro absolute left-1/2 flex h-[62px] w-[min(1120px,calc(100%-32px))] -translate-x-1/2 items-center justify-between rounded-2xl border border-pac/30 pr-3 pl-5.5 backdrop-blur-xl backdrop-saturate-150 transition-all duration-300',
             scrolled ? 'top-2.5 bg-deep/95 shadow-[0_22px_50px_-14px_#000,0_0_26px_-6px_#006986aa,0_2px_0_#ffffff14_inset]' : 'top-3.5 bg-deep/70 shadow-float',
           )}
         >
@@ -90,7 +90,7 @@ function Nav() {
               <Dialog.Trigger aria-label="Abrir menú" className="grid size-[42px] cursor-pointer place-items-center rounded-[10px] border border-pac/40 bg-white/5 md:hidden"><Menu size={20} /></Dialog.Trigger>
               <Dialog.Portal>
                 <Dialog.Overlay className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm data-[state=open]:animate-pop" />
-                <Dialog.Content className="gutter fixed inset-x-0 top-0 z-[70] mx-auto mt-3 grid w-[min(1120px,calc(100%-32px))] gap-1 rounded-2xl border border-pac/40 bg-deep p-4 shadow-card data-[state=open]:animate-pop">
+                <Dialog.Content className="tema-oscuro gutter fixed inset-x-0 top-0 z-[70] mx-auto mt-3 grid w-[min(1120px,calc(100%-32px))] gap-1 rounded-2xl border border-pac/40 bg-deep p-4 shadow-card data-[state=open]:animate-pop">
                   <div className="mb-2 flex items-center justify-between">
                     <Dialog.Title className="sr-only">Menú</Dialog.Title>
                     <img src="/img/wordmark.png" alt="wcurrents" className="h-5 w-auto" />

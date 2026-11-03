@@ -1,4 +1,4 @@
-import { CONTACT, NAV } from '@/content/site'
+import { CONTACT, NAV, SERVICES } from '@/content/site'
 import { scrollToId } from '@/lib/scroll'
 
 export function Footer() {
@@ -11,6 +11,9 @@ export function Footer() {
         </div>
         <nav aria-label="Pie" className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
           {NAV.map((n) => <a key={n.id} href={`/#${n.id}`} onClick={(e) => { if (scrollToId(n.id)) e.preventDefault() }} className="text-silver hover:text-white">{n.label}</a>)}
+        </nav>
+        <nav aria-label="Servicios" className="grid gap-y-2 text-sm">
+          {SERVICES.map((x) => <a key={x.slug} href={`/servicios/${x.slug}`} className="text-silver hover:text-white">{x.title}</a>)}
         </nav>
         <div className="text-sm text-silver"><div>{CONTACT.email}</div><div>{CONTACT.phone}</div><div>{CONTACT.place}</div></div>
       </div>

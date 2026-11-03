@@ -38,8 +38,8 @@
   html { scroll-behavior: smooth; }
   html.lenis, html.lenis body { height: auto; }
   .lenis.lenis-smooth { scroll-behavior: auto !important; }
-  body { background: var(--color-navy); color: #E9F2F5; font-family: var(--font-sans); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
-  :focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+  body { background: var(--color-navy); color: var(--color-text, #E9F2F5); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  :focus-visible { outline: 2px solid var(--color-white); outline-offset: 3px; }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 }
 
@@ -57,6 +57,34 @@
 @utility label-mono { font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; }
 
 @media (prefers-reduced-motion: reduce) { .animate-flow, .animate-ping-soft, .animate-wring { animation: none !important; } }
+
+/* ── Tema según el dispositivo ───────────────────────────────────────────────
+   Oscuro (marino) es el tema base. Si el dispositivo pide modo claro, los tokens de la raíz pasan a
+   papel y tinta: lo mismo que ya hacen las secciones claras del boceto. Hero, Método, Proyectos,
+   Cotizador y pie conservan sus tokens oscuros (fotos, brillos y animación pensados sobre fondo oscuro).
+   Las paletas del boceto (data-palette) quedan fuera. */
+:root { color-scheme: dark; }
+@media (prefers-color-scheme: light) {
+  :root:is(:not([data-palette]), [data-palette="a"]) {
+    color-scheme: light;
+    --color-white: #0E091C; --color-text: #0E091C; --color-soft: #3B4A57; --color-ice: #006986; --color-pac: #3F7A90;
+    --color-silver: #4a5a63; --color-deep: #FFFFFF; --color-navy: #F6F3EE; --color-cer: #D6E9F0;
+    --shadow-card: 0 14px 34px -16px #0E091C40, 0 1px 0 #ffffff inset;
+    --shadow-float: 0 14px 34px -14px #0E091C55, 0 0 0 1px #0E091C14;
+    --shadow-neon: 0 4px 14px -6px #006986aa;
+    --shadow-neon-strong: 0 4px 16px -4px #006986cc;
+  }
+  :root:is(:not([data-palette]), [data-palette="a"]) :is(#inicio, #metodo, #proyectos, #cotizar, footer, .tema-oscuro) {
+    --color-white: #fff; --color-text: #E9F2F5; --color-soft: #c3d6dd; --color-ice: #9fd0e0; --color-pac: #70ABBE;
+    --color-silver: #BAC6C9; --color-deep: #0F2431; --color-navy: #1B3B4F; --color-cer: #006986;
+    --shadow-card: 0 18px 50px -12px #000a, 0 2px 0 #ffffff0d inset;
+    --shadow-float: 0 18px 44px -14px #000d, 0 2px 0 #ffffff12 inset, 0 0 0 1px #00000040;
+    --shadow-neon: 0 0 6px color-mix(in srgb, #9fd0e0 67%, transparent), 0 0 18px color-mix(in srgb, #70ABBE 40%, transparent);
+    --shadow-neon-strong: 0 0 8px #fff9, 0 0 24px #70ABBE, 0 0 48px #006986;
+    color: #E9F2F5;
+  }
+  :root:is(:not([data-palette]), [data-palette="a"]) #metodo { color: #0E091C; }
+}
 
 /* ── Paletas alternativas del boceto ─────────────────────────────────────────
    Roles de color: navy/deep/ink = superficies · ice = acento de texto, checks y bordes activos ·

@@ -50,6 +50,7 @@ function Servicios() {
                     {s.items.map((it) => <li key={it} className="flex items-start gap-2"><Check size={15} className="mt-0.5 shrink-0 text-ice" />{it}</li>)}
                   </ul>
                   <Button className="mt-5" onClick={() => { addQuoteSvc(service); scrollToId('cotizar') }}>Cotizar esta disciplina <ArrowRight size={16} /></Button>
+                  <div><a href={`/servicios/${s.slug}`} className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-ice underline-offset-4 hover:underline">Ver detalle de {s.title} <ArrowRight size={14} /></a></div>
                 </div>
                 <div className="grid content-start gap-3">
                   {f.facts.map((x) => (
@@ -115,6 +116,7 @@ function Servicios() {
                 </div>
                 <p className="mt-6 flex max-w-[58ch] items-start gap-2 text-sm leading-snug text-soft"><Clock size={15} className="mt-0.5 shrink-0 text-ice" /><span><b className="font-semibold text-white">¿Qué define el alcance?</b> {f.plazo}</span></p>
                 <Button className="mt-7" onClick={() => { addQuoteSvc(service); scrollToId('cotizar') }}>Cotizar esta disciplina <ArrowRight size={16} /></Button>
+                <div><a href={`/servicios/${s.slug}`} className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-ice underline-offset-4 hover:underline">Ver detalle de {s.title} <ArrowRight size={14} /></a></div>
               </motion.article>
             </AnimatePresence>
             {/* Foto integrada al fondo de la sección: sus bordes se funden con el color de la sección */}
@@ -126,7 +128,7 @@ function Servicios() {
               </div>
             </motion.div>
             <Stamp className="right-6 bottom-2 z-10" />
-            <div className="label-mono absolute right-6 bottom-12 z-10 rounded-md bg-ink/70 px-2.5 py-1 text-ice backdrop-blur">{s.alt}</div>
+            <div className="label-mono absolute right-6 bottom-12 z-10 rounded-md bg-ink/70 px-2.5 py-1 text-[#9fd0e0] backdrop-blur">{s.alt}</div>
           </div>
         </div>
       </div>

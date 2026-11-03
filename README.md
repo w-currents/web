@@ -62,11 +62,13 @@ El sitio está pensado para aparecer en Google cuando una empresa busque estos s
 
 - **Una página por servicio**, cada una con su propio título, descripción, `canonical`, imagen para redes (OG 1200×630) y un solo `h1`.
 - **"Corrientes débiles"** está incorporado en títulos, descripciones y textos, junto con una pregunta frecuente específica en cada servicio.
-- **Datos estructurados (JSON-LD):** `Organization` (con `knowsAbout`), y en cada servicio `Service`, `BreadcrumbList` y `FAQPage`.
+- **Portada:** título y descripción con "ingeniería de corrientes débiles", cableado estructurado, CCTV e infraestructura crítica.
+- **Enlaces internos:** las seis páginas de servicio se enlazan desde el pie de página y desde cada disciplina de la sección Servicios.
+- **Datos estructurados (JSON-LD):** en la portada `Organization` (nombre alternativo "w-currents", contacto, ciudad, `knowsAbout`) y `WebSite`; en cada servicio `Service`, `BreadcrumbList` y `FAQPage`.
 - **`sitemap-index.xml`** generado automáticamente y **`robots.txt`**.
 - HTML estático, imágenes en WebP, fuentes propias precargadas y JavaScript solo donde hace falta.
 
-Pendientes de SEO que dependen de wcurrents (no de código): alta en **Google Search Console**, ficha de **Google Business Profile**, y revisión técnica del contenido por un ingeniero.
+Pendientes de SEO que dependen de wcurrents (no de código): alta en **Google Search Console**, ficha de **Google Business Profile** (verificación, fotos, reseñas), enlaces desde otros sitios y revisión técnica del contenido por un ingeniero. Posible ampliación: páginas propias de CCTV y cableado estructurado.
 
 ---
 
@@ -200,5 +202,6 @@ Las páginas vistas se miden con Vercel Web Analytics, que solo se carga en prod
 
 - Las paletas alternativas (`data-palette="b"` a `"f"`) de `global.css` y el componente `features/dev/Paleta.tsx` vienen de la etapa de bocetos. Solo se muestran en desarrollo (`import.meta.env.DEV`) y no afectan la versión publicada.
 - El tema real se define en el bloque `@theme` al inicio de `global.css`; cualquier cambio de color debe hacerse ahí para que se propague.
+- **Modo claro/oscuro:** el sitio es marino (oscuro) por defecto y pasa a papel y tinta si el dispositivo pide modo claro (`prefers-color-scheme`, sin botón manual). Es un bloque en `global.css` que redefine los tokens. Hero, Método, Proyectos, Cotizador, pie y barra de navegación (clase `tema-oscuro`) conservan los tokens oscuros. Al agregar colores fijos (`text-white`, hex) en secciones claras, usar tokens, no valores fijos. Para probar sin cambiar el sistema: DevTools → Rendering → *Emulate prefers-color-scheme*. Brave puede forzar el modo en `brave://settings/appearance`.
 - Imágenes OG: `scripts/generate-og.py` las regenera.
 - Vista previa del correo de cotización: `scripts/preview-mail.ts`.

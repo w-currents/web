@@ -1,6 +1,7 @@
 ---
 import Base from '@/layouts/Base.astro'
 import { SITE } from '@/config/site'
+import { CONTACT } from '@/content/site'
 import Nav from '@/features/nav/Nav'
 import Hero from '@/features/hero/Hero.astro'
 import Empresa from '@/features/empresa/Empresa'
@@ -13,16 +14,33 @@ import { Footer } from '@/features/footer/Footer'
 import WhatsApp from '@/features/whatsapp/WhatsApp'
 import Paleta from '@/features/dev/Paleta'
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Organization',
-  name: SITE.name,
-  url: SITE.url,
-  logo: `${SITE.url}/img/isotipo.png`,
-  description: SITE.description,
-  areaServed: { '@type': 'Country', name: 'Chile' },
-  knowsAbout: ['Corrientes débiles', 'Protección contra incendios', 'Automatización industrial', 'Telecomunicaciones', 'Seguridad electrónica', 'Instrumentación'],
-}
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': `${SITE.url}/#organization`,
+    name: SITE.name,
+    alternateName: ['w-currents', 'wcurrents Ingeniería'],
+    url: SITE.url,
+    logo: `${SITE.url}/img/isotipo.png`,
+    description: SITE.description,
+    email: CONTACT.email,
+    telephone: CONTACT.phone,
+    address: { '@type': 'PostalAddress', addressLocality: 'Santiago', addressCountry: 'CL' },
+    contactPoint: { '@type': 'ContactPoint', contactType: 'sales', telephone: CONTACT.phone, email: CONTACT.email, areaServed: 'CL', availableLanguage: 'es' },
+    areaServed: { '@type': 'Country', name: 'Chile' },
+    knowsAbout: ['Corrientes débiles', 'Ingeniería de infraestructura crítica', 'Cableado estructurado', 'CCTV', 'Control de acceso', 'Fibra óptica', 'Protección contra incendios', 'Automatización industrial', 'Telecomunicaciones', 'Seguridad electrónica', 'Instrumentación'],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: SITE.name,
+    alternateName: 'w-currents',
+    url: SITE.url,
+    inLanguage: 'es-CL',
+    publisher: { '@id': `${SITE.url}/#organization` },
+  },
+]
 ---
 <Base path="/" jsonLd={jsonLd}>
   <Nav client:load />

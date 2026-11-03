@@ -18,7 +18,7 @@ function WhatsApp() {
         </motion.a>
       </Tooltip.Trigger>
       <Tooltip.Portal>
-        <Tooltip.Content side="left" sideOffset={10} className="z-[90] rounded-lg bg-white px-3 py-2 text-sm font-medium text-ink shadow-float">Consulte a un ingeniero por WhatsApp<Tooltip.Arrow className="fill-white" /></Tooltip.Content>
+        <Tooltip.Content side="left" sideOffset={10} className="z-[90] rounded-lg bg-[#fff] px-3 py-2 text-sm font-medium text-ink shadow-float">Consulte a un ejecutivo por WhatsApp<Tooltip.Arrow className="fill-[#fff]" /></Tooltip.Content>
       </Tooltip.Portal>
     </Tooltip.Root></Tooltip.Provider>
   )
